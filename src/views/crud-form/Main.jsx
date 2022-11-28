@@ -6,7 +6,7 @@ import {v4} from 'uuid'
 
 function Main() {
   const [_, setTodoList] = useRecoilState(todoListAtom);
-  const [categories, setCategories] = useState([1, 3]);
+  const [categories, setCategories] = useState([3]);
   const editorConfig = {
     toolbar: {
       items: ["bold", "italic", "link"],
@@ -87,7 +87,7 @@ function Main() {
               <TomSelect
                 id="crud-form-2"
                 name="selects"
-                value={data.cate}
+                //value={data.cate}
                 onChange={(w) =>
                   setData({ ...data, cate: handleCategorie(w), id: v4() })
                 }
@@ -202,7 +202,7 @@ function Main() {
                   type="checkbox"
                  className="form-check-input"
                   name="status"
-                  value={data.status}
+                  //value={data.status}
                   onChange={e =>  setData({ ...data, status: (e.target.checked) ? true : false})}
                 />
               </div>
