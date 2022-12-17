@@ -2,7 +2,8 @@ import { ClassicEditor, TomSelect } from "@/base-components";
 import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { todoListAtom } from "../../recoil/atom/todoAtom";
-import {v4} from 'uuid'
+import { v4 } from "uuid";
+import { method } from "lodash";
 
 function Main() {
   const [_, setTodoList] = useRecoilState(todoListAtom);
@@ -23,9 +24,9 @@ function Main() {
     unit: "",
     wholesale: "",
     bulk: "",
-    cate: ''
+    cate: "",
+    completed: "",
   });
-
 
   const handleChange = ({ target: { name, value } }) =>
     setData({ ...data, [name]: value });
@@ -42,6 +43,7 @@ function Main() {
       unit: "",
       wholesale: "",
       bulk: "",
+      status: false,
     });
   };
 
@@ -57,12 +59,52 @@ function Main() {
       : "";
   };
 
+  const sendDb = () => {
+    const param = `https://api-todos-prueba.onrender.com/api/v1/list/34/tasks`;
+    fetch(param, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE2LCJpYXQiOjE2Njk4Mjk4MjcsImV4cCI6MTY3MjQyMTgyN30.MaMJO5KAo6I3fwtes_IV0mB9kxVBgC1aHbfWlZNVpk4",
+      },
+      body: JSON.stringify({ title: "test666", completed: true }),
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((res) => console.log(res));
+  };
+
+  const sendTwo = () => {
+    let config = {
+      headers: {
+        Accept: "application/json; charset=utf-8",
+        "content-type": "application/json; charset=utf-8",
+        Authorization:'',
+      },
+      
+    };
+    fetch(
+      "https://api-todos-prueba.onrender.com/api/v1/list/34/tasks", config)
+      .then((res) => {
+        console.log(res.body);
+        return res.json();
+      })
+      .then((req) => console.log(req))
+      .catch((error) => console.log({ error }));
+  };
+
+  useEffect(() => {
+    const tokencito = localStorage.getItem("token");
+    console.log(tokencito)
+  }, [])
+
   return (
     <>
       <div className="intro-y flex items-center mt-8">
         <h2 className="text-lg font-medium mr-auto">Form Layout</h2>
       </div>
-      <div className="grid grid-cols-12 gap-6 mt-5">
+      <form className="grid grid-cols-12 gap-6 mt-5">
         <div className="intro-y col-span-12 lg:col-span-6 ">
           {/* BEGIN: Form Layout */}
           <div className="intro-y box p-5">
@@ -89,7 +131,11 @@ function Main() {
                 name="selects"
                 //value={data.cate}
                 onChange={(w) =>
-                  setData({ ...data, cate: handleCategorie(w), id: v4() })
+                  setData({
+                    ...data,
+                    cate: handleCategorie(w),
+                    id: v4(),
+                  })
                 }
                 className="w-full"
               >
@@ -200,10 +246,14 @@ function Main() {
               <div className="form-switch mt-2">
                 <input
                   type="checkbox"
-                 className="form-check-input"
+                  className="form-check-input"
                   name="status"
-                  //value={data.status}
-                  onChange={e =>  setData({ ...data, status: (e.target.checked) ? true : false})}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      status: e.target.checked ? true : false,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -227,7 +277,7 @@ function Main() {
               <button
                 type="button"
                 className="btn btn-primary w-24"
-                onClick={addTodoItem}
+                onClick={(e) => addTodoItem(e)}
               >
                 Save
               </button>
@@ -235,7 +285,7 @@ function Main() {
           </div>
           {/* END: Form Layout */}
         </div>
-      </div>
+      </form>
     </>
   );
 }
