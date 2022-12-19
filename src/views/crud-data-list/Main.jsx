@@ -7,6 +7,7 @@ import {
   DropdownItem,
   Modal,
   ModalBody,
+  LoadingIcon,
 } from "@/base-components";
 import { useState, useEffect } from "react";
 import classnames from "classnames";
@@ -23,8 +24,11 @@ function Main() {
   const [counter, setCounter] = useState(1);
   const [masterData, setMasterData] = useState([]);
   const [dataLocal, setDataLocal] = useState({});
-  const [idTask, setIdTask] = useState('')
-  const [error, setError] = useState('Tu tarea debe contener mas 3 caracteres')
+  const [idTask, setIdTask] = useState("");
+  const [error, setError] = useState(
+    "Tu tarea debe contener mas 3 caracteres"
+  );
+  const [loading, setLoading] = useState(true);
 
   const [viewEdit, setViewEdit] = useState(false);
 
@@ -40,7 +44,7 @@ function Main() {
   const getIdTask = (id) => {
     setDeleteConfirmationModal(true);
     setIdTask(id);
-  }
+  };
 
   const changeView = (id) => {
     setDataLocal(masterData.filter((x) => x.id == id));
@@ -54,7 +58,7 @@ function Main() {
 
   const sendDb = () => {
     const param = `https://api-todos-prueba.onrender.com/api/v1/list/34/tasks`;
-    if (newData.title !== '') {
+    if (newData.title !== "") {
       fetch(param, {
         headers: {
           Accept: "application/json",
@@ -70,10 +74,10 @@ function Main() {
           clearForm();
         })
         .catch((error) => console.log({ error }));
-  
+
       setShowModal(false);
     } else {
-      setError('Tu tarea no debe estar vacia')
+      setError("Tu tarea no debe estar vacia");
     }
   };
 
@@ -88,7 +92,10 @@ function Main() {
       method: "GET",
     })
       .then((res) => res.json())
-      .then((res) => setMasterData(res));
+      .then((res) => {
+        setMasterData(res);
+        setLoading(false);
+      });
   };
 
   const deleteTask = (taskId) => {
@@ -103,8 +110,8 @@ function Main() {
     })
       .then((res) => res.json())
       .then((res) => console.log(res));
-      refreshUi();
-      setDeleteConfirmationModal(false)  
+    refreshUi();
+    setDeleteConfirmationModal(false);
   };
 
   const handleChange = ({ target: { name, value } }) =>
@@ -115,7 +122,7 @@ function Main() {
       <h2 className="intro-y text-lg font-medium mt-10">
         Data List Layout
       </h2>
-      <div className="grid grid-cols-12 gap-6 mt-5">
+      <div className="grid grid-cols-12 gap-6 mt-5 relative">
         <div className="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2 relative -z-40">
           <button
             className="btn btn-primary shadow-md mr-2"
@@ -164,75 +171,82 @@ function Main() {
           </div>
         </div>
         {/* BEGIN: Data List */}
-        <div className="intro-y col-span-12 overflow-auto lg:overflow-visible relative">
-          <table className="table table-report -mt-2">
-            <thead>
-              <tr>
-                <th className="whitespace-nowrap">TITLE</th>
-                <th className="text-center whitespace-nowrap">
-                  STATUS
-                </th>
-                <th className="text-center whitespace-nowrap">
-                  ACTIONS
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {masterData.map((item, index) => (
-                <tr key={index} className="intro-x">
-                  <td>
-                    <a
-                      href=""
-                      className="font-medium whitespace-nowrap"
-                    >
-                      {item.title}
-                    </a>
-                  </td>
-                  <td className="w-40">
-                    <div
-                      className={classnames({
-                        "flex items-center justify-center": true,
-                        "text-success": item.completed,
-                        "text-danger": !item.completed,
-                      })}
-                    >
-                      <Lucide
-                        icon="CheckSquare"
-                        className="w-4 h-4 mr-2"
-                      />
-                      {item.completed ? "Active" : "Inactive"}
-                    </div>
-                  </td>
-                  <td className="table-report__action w-56">
-                    <div className="flex justify-center items-center">
+        <div className="intro-y col-span-12 overflow-auto lg:overflow-visible relative py-4">
+          {loading ? (
+            <div className="border-2 w-full h-[80px] flex justify-center items-center">
+              <LoadingIcon icon="tail-spin" className="w-8 h-8" />
+            </div>
+          ) : (
+            <table className="table table-report -mt-2">
+              <thead>
+                <tr>
+                  <th className="whitespace-nowrap">TITLE</th>
+                  <th className="text-center whitespace-nowrap">
+                    STATUS
+                  </th>
+                  <th className="text-center whitespace-nowrap">
+                    ACTIONS
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {masterData.map((item, index) => (
+                  <tr key={index} className="intro-x">
+                    <td>
                       <a
-                        className="flex items-center mr-3"
-                        href="#"
-                        onClick={() => changeView(item.id)}
+                        href=""
+                        className="font-medium whitespace-nowrap"
+                      >
+                        {item.title}
+                      </a>
+                    </td>
+                    <td className="w-40">
+                      <div
+                        className={classnames({
+                          "flex items-center justify-center": true,
+                          "text-success": item.completed,
+                          "text-danger": !item.completed,
+                        })}
                       >
                         <Lucide
                           icon="CheckSquare"
-                          className="w-4 h-4 mr-1"
-                        />{" "}
-                        Edit
-                      </a>
-                      <a
-                        className="flex items-center text-danger"
-                        href="#"
-                        onClick={() => getIdTask(item.id)}
-                      >
-                        <Lucide
-                          icon="Trash2"
-                          className="w-4 h-4 mr-1"
-                        />{" "}
-                        Delete
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                          className="w-4 h-4 mr-2"
+                        />
+                        {item.completed ? "Active" : "Inactive"}
+                      </div>
+                    </td>
+                    <td className="table-report__action w-56">
+                      <div className="flex justify-center items-center">
+                        <a
+                          className="flex items-center mr-3"
+                          href="#"
+                          onClick={() => changeView(item.id)}
+                        >
+                          <Lucide
+                            icon="CheckSquare"
+                            className="w-4 h-4 mr-1"
+                          />{" "}
+                          Edit
+                        </a>
+                        <a
+                          className="flex items-center text-danger"
+                          href="#"
+                          onClick={() => getIdTask(item.id)}
+                        >
+                          <Lucide
+                            icon="Trash2"
+                            className="w-4 h-4 mr-1"
+                          />{" "}
+                          Delete
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
           {viewEdit && (
             <Formcito
               saySome={changeViewTwo}
@@ -300,6 +314,7 @@ function Main() {
             <option>50</option>
           </select>
         </div>
+
         {/* END: Pagination */}
       </div>
       {/* BEGIN: Delete Confirmation Modal */}
@@ -383,7 +398,11 @@ function Main() {
               </div>
             </form>
           </div>
-          {newData.title.length < 4 && <span className="text-red-700 block text-center pb-2 text-sm">{error}</span>}
+          {newData.title.length < 4 && (
+            <span className="text-red-700 block text-center pb-2 text-sm">
+              {error}
+            </span>
+          )}
           <div className="px-5 pb-8 text-center flex justify-center gap-2 ">
             <button
               type="button"
