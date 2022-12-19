@@ -8,12 +8,9 @@ import {
   Modal,
   ModalBody,
 } from "@/base-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import classnames from "classnames";
-import { useRecoilValue, useRecoilState } from "recoil";
-import { todoListAtom } from "../../recoil/atom/todoAtom";
-import React from "react";
-import { Formcito } from "../../recoil/Formcito";
+import { Formcito } from "../../components/Formcito/Formcito";
 
 function Main() {
   const [deleteConfirmationModal, setDeleteConfirmationModal] =
@@ -29,12 +26,12 @@ function Main() {
 
   const [viewEdit, setViewEdit] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     getData();
     console.log(counter);
   }, [counter]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setDataLocal(dataLocal);
   }, [dataLocal]);
 
@@ -107,7 +104,7 @@ function Main() {
         Data List Layout
       </h2>
       <div className="grid grid-cols-12 gap-6 mt-5">
-        <div className="intro-y col-span-12 border flex flex-wrap sm:flex-nowrap items-center mt-2">
+        <div className="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2 relative -z-40">
           <button
             className="btn btn-primary shadow-md mr-2"
             onClick={() => setShowModal(true)}
@@ -140,8 +137,8 @@ function Main() {
           <div className=" mx-auto text-slate-500 ">
             Showing 1 to 10 of 150 entries
           </div>
-          <div className="w-full  sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
-            <div className="w-56 relative text-slate-500">
+          <div className="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
+            <div className="w-56 text-slate-500">
               <input
                 type="text"
                 className="form-control w-56 box pr-10"
@@ -155,7 +152,7 @@ function Main() {
           </div>
         </div>
         {/* BEGIN: Data List */}
-        <div className="intro-y col-span-12 overflow-auto lg:overflow-visible">
+        <div className="intro-y col-span-12 overflow-auto lg:overflow-visible relative">
           <table className="table table-report -mt-2">
             <thead>
               <tr>
@@ -351,7 +348,6 @@ function Main() {
                 Title:
                 <input
                   type="text"
-                  //placeholder="Estudiar"
                   name="title"
                   className="bg-transparent outline-none border-b-2 "
                   value={newData.title}
@@ -364,7 +360,6 @@ function Main() {
                   <input
                     type="checkbox"
                     className="form-check-input"
-                    //defaultChecked={newData.completed}
                     onChange={(e) =>
                       setNewData({
                         ...newData,

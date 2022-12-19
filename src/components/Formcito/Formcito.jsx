@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Formcito = ({ task, saySome, refreshUi}) => {
+export const Formcito = ({ task, saySome, refreshUi }) => {
   const [newData, setNewData] = React.useState(task[0]);
   const [idTask, setIdTask] = React.useState("");
 
@@ -19,13 +19,15 @@ export const Formcito = ({ task, saySome, refreshUi}) => {
         "Content-Type": "application/json",
         Authorization: localStorage.getItem("token"),
       },
-      body: JSON.stringify({title:`${newData.title}`, completed: `${newData.completed}`}),
+      body: JSON.stringify({
+        title: `${newData.title}`,
+        completed: `${newData.completed}`,
+      }),
       method: "PATCH",
-    })
-      .then(res => {
-        console.log( res.status);
-        refreshUi()
-      })
+    }).then((res) => {
+      console.log(res.status);
+      refreshUi();
+    });
     saySome();
   };
 
