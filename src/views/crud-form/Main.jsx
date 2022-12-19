@@ -18,7 +18,6 @@ function Main() {
               <input
                 id="crud-form-1"
                 name="productName"
-                
                 type="text"
                 className="form-control w-full"
                 placeholder="Input text"

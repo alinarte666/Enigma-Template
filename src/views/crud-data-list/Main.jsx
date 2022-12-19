@@ -23,6 +23,7 @@ function Main() {
   const [counter, setCounter] = useState(1);
   const [masterData, setMasterData] = useState([]);
   const [dataLocal, setDataLocal] = useState({});
+  const [idTask, setIdTask] = useState('')
 
   const [viewEdit, setViewEdit] = useState(false);
 
@@ -34,6 +35,11 @@ function Main() {
   useEffect(() => {
     setDataLocal(dataLocal);
   }, [dataLocal]);
+
+  const getIdTask = (id) => {
+    setDeleteConfirmationModal(true);
+    setIdTask(id);
+  }
 
   const changeView = (id) => {
     setDataLocal(masterData.filter((x) => x.id == id));
@@ -92,7 +98,8 @@ function Main() {
     })
       .then((res) => res.json())
       .then((res) => console.log(res));
-    refreshUi();
+      refreshUi();
+      setDeleteConfirmationModal(false)  
   };
 
   const handleChange = ({ target: { name, value } }) =>
@@ -207,9 +214,7 @@ function Main() {
                       <a
                         className="flex items-center text-danger"
                         href="#"
-                        onClick={() => {
-                          deleteTask(item.id);
-                        }}
+                        onClick={() => getIdTask(item.id)}
                       >
                         <Lucide
                           icon="Trash2"
@@ -324,7 +329,7 @@ function Main() {
             <button
               type="button"
               className="btn btn-danger w-24"
-              onClick={() => removeTodo(idG)}
+              onClick={() => deleteTask(idTask)}
             >
               Delete
             </button>
@@ -391,64 +396,6 @@ function Main() {
           </div>
         </ModalBody>
       </Modal>
-      {/* <Modal
-        show={viewEdit}
-        onHidden={() => {
-          setViewEdit(false);
-        }}
-      > () => console.log(newData)
-        <ModalBody className="p-0">
-          <div className="p-5 text-center">
-            <h1 className="text-left text-lg">Actualiza tu Tarea</h1>
-            <form>
-              <label className="flex flex-col gap-2 items-center text-[25px]">
-                Title:
-                <input
-                  type="text"
-                  defaultValue={dataLocal.title}
-                  name="title"
-                  className="bg-transparent hover:outline-none"
-                  onChange={handleUpdate}
-                />
-              </label>
-              <div className="mt-3 text-[25px]">
-                <label>Active Status</label>
-                <div className="form-switch mt-2">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    defaultChecked={dataLocal.completed}
-                    onChange={(e) =>
-                      setUpdateData({
-                        ...updateData,
-                        completed: e.target.checked ? true : false,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-            </form>
-          </div>
-          <div className="px-5 pb-8 text-center flex justify-center gap-2 ">
-            <button
-              type="button"
-              onClick={() => {
-                setViewEdit(false);
-              }}
-              className="btn btn-danger w-24 mr-1"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              className="btn btn-info w-24"
-              onClick={sendDb}
-            >
-              Update
-            </button>
-          </div>
-        </ModalBody>
-      </Modal> */}
     </>
   );
 }
