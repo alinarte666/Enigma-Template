@@ -24,6 +24,7 @@ function Main() {
   const [masterData, setMasterData] = useState([]);
   const [dataLocal, setDataLocal] = useState({});
   const [idTask, setIdTask] = useState('')
+  const [error, setError] = useState('Tu tarea debe contener mas 3 caracteres')
 
   const [viewEdit, setViewEdit] = useState(false);
 
@@ -53,23 +54,27 @@ function Main() {
 
   const sendDb = () => {
     const param = `https://api-todos-prueba.onrender.com/api/v1/list/34/tasks`;
-    fetch(param, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-      body: JSON.stringify(newData),
-      method: "POST",
-    })
-      .then((res) => {
-        console.log(res.statusText);
-        refreshUi();
-        clearForm();
+    if (newData.title !== '') {
+      fetch(param, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+        body: JSON.stringify(newData),
+        method: "POST",
       })
-      .catch((error) => console.log({ error }));
-
-    setShowModal(false);
+        .then((res) => {
+          console.log(res.statusText);
+          refreshUi();
+          clearForm();
+        })
+        .catch((error) => console.log({ error }));
+  
+      setShowModal(false);
+    } else {
+      setError('Tu tarea no debe estar vacia')
+    }
   };
 
   const getData = () => {
@@ -337,6 +342,8 @@ function Main() {
         </ModalBody>
       </Modal>
       {/* END: Delete Confirmation Modal */}
+
+      {/* BEGIN: Add Task Modal */}
       <Modal
         show={showModal}
         onHidden={() => {
@@ -376,6 +383,7 @@ function Main() {
               </div>
             </form>
           </div>
+          {newData.title.length < 4 && <span className="text-red-700 block text-center pb-2 text-sm">{error}</span>}
           <div className="px-5 pb-8 text-center flex justify-center gap-2 ">
             <button
               type="button"
@@ -396,6 +404,7 @@ function Main() {
           </div>
         </ModalBody>
       </Modal>
+      {/* END: Add Task Modal */}
     </>
   );
 }
