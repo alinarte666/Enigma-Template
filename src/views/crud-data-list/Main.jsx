@@ -17,8 +17,6 @@ import { UseSendDb } from "../../utils/hook/UseSendDb";
 import { UseDelete } from "../../utils/hook/UseDelete";
 
 function Main() {
-  //const [deleteConfirmationModal, setDeleteConfirmationModal] =
-    //useState(false);
   const [data, loading, getData] = UseFetch();
   const {newData, setNewData,handleChange, errorMessa, showModal, setShowModal, send} = UseSendDb();
   const [deleteConfirmationModal, setDeleteConfirmationModal, deleteTask] = UseDelete()
@@ -26,10 +24,8 @@ function Main() {
   const [counter, setCounter] = useState(1);
   const [dataLocal, setDataLocal] = useState({});
   const [idTask, setIdTask] = useState("");
- 
-
   const [viewEdit, setViewEdit] = useState(false);
-
+ 
   useEffect(() => {
     getData();
   }, [counter]);
@@ -49,25 +45,7 @@ function Main() {
   };
 
   const refreshUi = () => setCounter(counter + 1);
-
   const changeViewTwo = () => setViewEdit(false);
-
-  // const deleteTask = (taskId) => {
-  //   const param = `https://api-todos-prueba.onrender.com/api/v1/list/34/tasks/${taskId}`;
-  //   fetch(param, {
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //       Authorization: localStorage.getItem("token"),
-  //     },
-  //     method: "DELETE",
-  //   })
-  //     .then((res) => res.json())
-  //     .then((res) => console.log(res));
-  //   refreshUi();
-  //   setDeleteConfirmationModal(false);
-  // };
-
 
   return (
     <>
@@ -125,7 +103,7 @@ function Main() {
         {/* BEGIN: Data List */}
         <div className="intro-y col-span-12 overflow-auto lg:overflow-visible relative py-4">
           {loading ? (
-            <div className="border-2 w-full h-[80px] flex justify-center items-center">
+            <div className="w-full h-[80px] flex justify-center items-center">
               <LoadingIcon icon="tail-spin" className="w-8 h-8" />
             </div>
           ) : (
@@ -142,7 +120,7 @@ function Main() {
                 </tr>
               </thead>
               {loading ? (
-                <div className="border-2 w-full h-[80px] flex justify-center items-center">
+                <div className="w-full h-[80px] flex justify-center items-center">
                   <LoadingIcon icon="tail-spin" className="w-8 h-8" />
                 </div>
               ) : (
