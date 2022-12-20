@@ -12,6 +12,7 @@ import {
 import { useState, useEffect } from "react";
 import classnames from "classnames";
 import { Formcito } from "../../components/Formcito/Formcito";
+import { UseFetch } from "../../utils/hook/UseFetch";
 
 function Main() {
   const [deleteConfirmationModal, setDeleteConfirmationModal] =
@@ -21,20 +22,20 @@ function Main() {
     title: "",
     completed: false,
   });
+
+  const [data, loading, getData] = UseFetch();
   const [counter, setCounter] = useState(1);
-  const [masterData, setMasterData] = useState([]);
+  //const [masterData, setMasterData] = useState([]);
   const [dataLocal, setDataLocal] = useState({});
   const [idTask, setIdTask] = useState("");
   const [error, setError] = useState(
     "Tu tarea debe contener mas 3 caracteres"
   );
-  const [loading, setLoading] = useState(true);
-
+  
   const [viewEdit, setViewEdit] = useState(false);
 
   useEffect(() => {
     getData();
-    console.log(counter);
   }, [counter]);
 
   useEffect(() => {
@@ -47,7 +48,7 @@ function Main() {
   };
 
   const changeView = (id) => {
-    setDataLocal(masterData.filter((x) => x.id == id));
+    setDataLocal(data.filter((x) => x.id == id));
     setViewEdit(true);
   };
 
@@ -79,23 +80,6 @@ function Main() {
     } else {
       setError("Tu tarea no debe estar vacia");
     }
-  };
-
-  const getData = () => {
-    const param = `https://api-todos-prueba.onrender.com/api/v1/list/34/tasks`;
-    fetch(param, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        setMasterData(res);
-        setLoading(false);
-      });
   };
 
   const deleteTask = (taskId) => {
@@ -189,61 +173,67 @@ function Main() {
                   </th>
                 </tr>
               </thead>
-              <tbody>
-                {masterData.map((item, index) => (
-                  <tr key={index} className="intro-x">
-                    <td>
-                      <a
-                        href=""
-                        className="font-medium whitespace-nowrap"
-                      >
-                        {item.title}
-                      </a>
-                    </td>
-                    <td className="w-40">
-                      <div
-                        className={classnames({
-                          "flex items-center justify-center": true,
-                          "text-success": item.completed,
-                          "text-danger": !item.completed,
-                        })}
-                      >
-                        <Lucide
-                          icon="CheckSquare"
-                          className="w-4 h-4 mr-2"
-                        />
-                        {item.completed ? "Active" : "Inactive"}
-                      </div>
-                    </td>
-                    <td className="table-report__action w-56">
-                      <div className="flex justify-center items-center">
+              {loading ? (
+                <div className="border-2 w-full h-[80px] flex justify-center items-center">
+                  <LoadingIcon icon="tail-spin" className="w-8 h-8" />
+                </div>
+              ) : (
+                <tbody>
+                  {data.map((item, index) => (
+                    <tr key={index} className="intro-x">
+                      <td>
                         <a
-                          className="flex items-center mr-3"
-                          href="#"
-                          onClick={() => changeView(item.id)}
+                          href=""
+                          className="font-medium whitespace-nowrap"
+                        >
+                          {item.title}
+                        </a>
+                      </td>
+                      <td className="w-40">
+                        <div
+                          className={classnames({
+                            "flex items-center justify-center": true,
+                            "text-success": item.completed,
+                            "text-danger": !item.completed,
+                          })}
                         >
                           <Lucide
                             icon="CheckSquare"
-                            className="w-4 h-4 mr-1"
-                          />{" "}
-                          Edit
-                        </a>
-                        <a
-                          className="flex items-center text-danger"
-                          href="#"
-                          onClick={() => getIdTask(item.id)}
-                        >
-                          <Lucide
-                            icon="Trash2"
-                            className="w-4 h-4 mr-1"
-                          />{" "}
-                          Delete
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+                            className="w-4 h-4 mr-2"
+                          />
+                          {item.completed ? "Active" : "Inactive"}
+                        </div>
+                      </td>
+                      <td className="table-report__action w-56">
+                        <div className="flex justify-center items-center">
+                          <a
+                            className="flex items-center mr-3"
+                            href="#"
+                            onClick={() => changeView(item.id)}
+                          >
+                            <Lucide
+                              icon="CheckSquare"
+                              className="w-4 h-4 mr-1"
+                            />{" "}
+                            Edit
+                          </a>
+                          <a
+                            className="flex items-center text-danger"
+                            href="#"
+                            onClick={() => getIdTask(item.id)}
+                          >
+                            <Lucide
+                              icon="Trash2"
+                              className="w-4 h-4 mr-1"
+                            />{" "}
+                            Delete
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              )}
             </table>
           )}
 
