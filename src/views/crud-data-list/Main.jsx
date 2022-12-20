@@ -14,12 +14,14 @@ import classnames from "classnames";
 import { Formcito } from "../../components/Formcito/Formcito";
 import { UseFetch } from "../../utils/hook/UseFetch";
 import { UseSendDb } from "../../utils/hook/UseSendDb";
+import { UseDelete } from "../../utils/hook/UseDelete";
 
 function Main() {
-  const [deleteConfirmationModal, setDeleteConfirmationModal] =
-    useState(false);
+  //const [deleteConfirmationModal, setDeleteConfirmationModal] =
+    //useState(false);
   const [data, loading, getData] = UseFetch();
-  const {newData, handleChange, errorMessa, showModal, setShowModal, send} = UseSendDb();
+  const {newData, setNewData,handleChange, errorMessa, showModal, setShowModal, send} = UseSendDb();
+  const [deleteConfirmationModal, setDeleteConfirmationModal, deleteTask] = UseDelete()
 
   const [counter, setCounter] = useState(1);
   const [dataLocal, setDataLocal] = useState({});
@@ -50,21 +52,21 @@ function Main() {
 
   const changeViewTwo = () => setViewEdit(false);
 
-  const deleteTask = (taskId) => {
-    const param = `https://api-todos-prueba.onrender.com/api/v1/list/34/tasks/${taskId}`;
-    fetch(param, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
-      },
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((res) => console.log(res));
-    refreshUi();
-    setDeleteConfirmationModal(false);
-  };
+  // const deleteTask = (taskId) => {
+  //   const param = `https://api-todos-prueba.onrender.com/api/v1/list/34/tasks/${taskId}`;
+  //   fetch(param, {
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //       Authorization: localStorage.getItem("token"),
+  //     },
+  //     method: "DELETE",
+  //   })
+  //     .then((res) => res.json())
+  //     .then((res) => console.log(res));
+  //   refreshUi();
+  //   setDeleteConfirmationModal(false);
+  // };
 
 
   return (
@@ -146,7 +148,7 @@ function Main() {
               ) : (
                 <tbody>
                   {data.map((item, index) => (
-                    <tr key={index} className="intro-x">
+                    <tr key={item.id} className="intro-x">
                       <td>
                         <a
                           href=""
@@ -305,7 +307,7 @@ function Main() {
             <button
               type="button"
               className="btn btn-danger w-24"
-              onClick={() => deleteTask(idTask)}
+              onClick={() => deleteTask(idTask, refreshUi)}
             >
               Delete
             </button>
@@ -343,6 +345,7 @@ function Main() {
                   <input
                     type="checkbox"
                     className="form-check-input"
+                    defaultChecked={false}
                     onChange={(e) =>
                       setNewData({
                         ...newData,
