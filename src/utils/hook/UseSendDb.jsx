@@ -33,5 +33,5 @@ export const UseSendDb = () => {
       setErrorMessa("Tu tarea no debe estar vacia");
     }
   };
-    return {newData, handleChange, errorMessa, showModal, setShowModal, send}
+    return {newData, setNewData, handleChange, errorMessa, showModal, setShowModal, send}
 }
