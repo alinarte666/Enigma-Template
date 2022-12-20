@@ -13,25 +13,19 @@ import { useState, useEffect } from "react";
 import classnames from "classnames";
 import { Formcito } from "../../components/Formcito/Formcito";
 import { UseFetch } from "../../utils/hook/UseFetch";
+import { UseSendDb } from "../../utils/hook/UseSendDb";
 
 function Main() {
   const [deleteConfirmationModal, setDeleteConfirmationModal] =
     useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [newData, setNewData] = useState({
-    title: "",
-    completed: false,
-  });
-
   const [data, loading, getData] = UseFetch();
+  const {newData, handleChange, errorMessa, showModal, setShowModal, send} = UseSendDb();
+
   const [counter, setCounter] = useState(1);
-  //const [masterData, setMasterData] = useState([]);
   const [dataLocal, setDataLocal] = useState({});
   const [idTask, setIdTask] = useState("");
-  const [error, setError] = useState(
-    "Tu tarea debe contener mas 3 caracteres"
-  );
-  
+ 
+
   const [viewEdit, setViewEdit] = useState(false);
 
   useEffect(() => {
@@ -53,34 +47,8 @@ function Main() {
   };
 
   const refreshUi = () => setCounter(counter + 1);
-  const clearForm = () => setNewData({ title: "", completed: false });
 
   const changeViewTwo = () => setViewEdit(false);
-
-  const sendDb = () => {
-    const param = `https://api-todos-prueba.onrender.com/api/v1/list/34/tasks`;
-    if (newData.title !== "") {
-      fetch(param, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
-        },
-        body: JSON.stringify(newData),
-        method: "POST",
-      })
-        .then((res) => {
-          console.log(res.statusText);
-          refreshUi();
-          clearForm();
-        })
-        .catch((error) => console.log({ error }));
-
-      setShowModal(false);
-    } else {
-      setError("Tu tarea no debe estar vacia");
-    }
-  };
 
   const deleteTask = (taskId) => {
     const param = `https://api-todos-prueba.onrender.com/api/v1/list/34/tasks/${taskId}`;
@@ -98,8 +66,6 @@ function Main() {
     setDeleteConfirmationModal(false);
   };
 
-  const handleChange = ({ target: { name, value } }) =>
-    setNewData({ ...newData, [name]: value });
 
   return (
     <>
@@ -390,7 +356,7 @@ function Main() {
           </div>
           {newData.title.length < 4 && (
             <span className="text-red-700 block text-center pb-2 text-sm">
-              {error}
+              {errorMessa}
             </span>
           )}
           <div className="px-5 pb-8 text-center flex justify-center gap-2 ">
@@ -406,7 +372,7 @@ function Main() {
             <button
               type="button"
               className="btn btn-success w-24"
-              onClick={sendDb}
+              onClick={() => send(refreshUi)}
             >
               Save
             </button>
