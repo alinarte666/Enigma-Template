@@ -1,3 +1,4 @@
+import {Link} from 'react-router-dom'
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import logoUrl from "@/assets/images/logo.svg";
@@ -112,7 +113,7 @@ function Main() {
                     Register
                   </button>
                   <button className="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top">
-                    Sign in
+                    <Link to="/">Sign in</Link> 
                   </button>
                 </div>
               </div>
