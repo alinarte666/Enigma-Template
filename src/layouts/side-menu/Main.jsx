@@ -26,7 +26,7 @@ function Main() {
   }, [sideMenuStore, location.pathname]);
 
   useEffect(() => {
-    localStorage.setItem("token", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE2LCJpYXQiOjE2Njk4Mjk4MjcsImV4cCI6MTY3MjQyMTgyN30.MaMJO5KAo6I3fwtes_IV0mB9kxVBgC1aHbfWlZNVpk4")
+    //localStorage.setItem("token", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE2LCJpYXQiOjE2Njk4Mjk4MjcsImV4cCI6MTY3MjQyMTgyN30.MaMJO5KAo6I3fwtes_IV0mB9kxVBgC1aHbfWlZNVpk4")
   }, [])
 
   return (

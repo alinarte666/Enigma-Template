@@ -71,6 +71,7 @@ import Validation from "../views/validation/Main";
 import Chart from "../views/chart/Main";
 import Slider from "../views/slider/Main";
 import ImageZoom from "../views/image-zoom/Main";
+import ProtectedRoute from '../utils/hook/ProtectedRoute'
 
 function Router() {
   const routes = [
@@ -80,7 +81,11 @@ function Router() {
     },
     {
       path: "/simple-menu",
-      element: <SimpleMenu />,
+      element: <ProtectedRoute>
+                <SimpleMenu />
+              </ProtectedRoute>
+              ,
+              
       children: [
         {
           path: "dashboard-overview-1",

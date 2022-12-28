@@ -1,14 +1,42 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import logoUrl from "@/assets/images/logo.svg";
 import illustrationUrl from "@/assets/images/illustration.svg";
 import { useEffect } from "react";
 
+import { useRecoilState } from "recoil";
+import { currentUserAtom } from "../../recoil/atom/userAtom";
+import { UseDataUser } from "../../utils/hook/UseDataUser";
+import { UseLogin } from "../../utils/hook/UseLogin";
+
 function Main() {
   useEffect(() => {
-    dom("body").removeClass("main").removeClass("error-page").addClass("login");
+    dom("body")
+      .removeClass("main")
+      .removeClass("error-page")
+      .addClass("login");
   }, []);
+
+  const [_, setCurrentUser] = useRecoilState(currentUserAtom);
+  const { handleChange, dataUser } = UseDataUser();
+  const [userLogin] = UseLogin();
+
+  const navigate = useNavigate();
+
+  const goToHome = () => {
+    setCurrentUser(dataUser);
+    navigate("/simple-menu/crud-data-list");
+  };
+
+  const loginUser = () => {
+    const param =
+      "https://api-todos-prueba.onrender.com/api/v1/auth/login";
+    if (dataUser.email && dataUser.password) {
+      userLogin(dataUser);
+      goToHome();
+    }
+  };
 
   return (
     <>
@@ -24,7 +52,10 @@ function Main() {
                   className="w-6"
                   src={logoUrl}
                 />
-                <span className="text-white text-lg ml-3"> Enigma </span>
+                <span className="text-white text-lg ml-3">
+                  {" "}
+                  Enigma{" "}
+                </span>
               </a>
               <div className="my-auto">
                 <img
@@ -49,19 +80,24 @@ function Main() {
                   Sign In
                 </h2>
                 <div className="intro-x mt-2 text-slate-400 xl:hidden text-center">
-                  A few more clicks to sign in to your account. Manage all your
-                  e-commerce accounts in one place
+                  A few more clicks to sign in to your account. Manage
+                  all your e-commerce accounts in one place
                 </div>
                 <div className="intro-x mt-8">
                   <input
                     type="text"
                     className="intro-x login__input form-control py-3 px-4 block"
                     placeholder="Email"
+                    name="email"
+                    onChange={handleChange}
+                    autoFocus
                   />
                   <input
                     type="password"
                     className="intro-x login__input form-control py-3 px-4 block mt-4"
                     placeholder="Password"
+                    name="password"
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="intro-x flex text-slate-600 dark:text-slate-500 text-xs sm:text-sm mt-4">
@@ -81,21 +117,30 @@ function Main() {
                   <a href="">Forgot Password?</a>
                 </div>
                 <div className="intro-x mt-5 xl:mt-8 text-center xl:text-left">
-                  <button className="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">
+                  <button
+                    className="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top"
+                    onClick={loginUser}
+                  >
                     Login
                   </button>
                   <button className="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top">
-                    <Link to="/register">Register</Link> 
+                    <Link to="/register">Register</Link>
                   </button>
                 </div>
                 <div className="intro-x mt-10 xl:mt-24 text-slate-600 dark:text-slate-500 text-center xl:text-left">
                   <span>By signin up, you agree to our </span>
-                  <a className="text-primary dark:text-slate-200" href="">
+                  <a
+                    className="text-primary dark:text-slate-200"
+                    href=""
+                  >
                     Terms and Conditions
                   </a>
                   <span> & </span>
-                  <a className="text-primary dark:text-slate-200" href="">
-                     Privacy Policy
+                  <a
+                    className="text-primary dark:text-slate-200"
+                    href=""
+                  >
+                    Privacy Policy
                   </a>
                 </div>
               </div>

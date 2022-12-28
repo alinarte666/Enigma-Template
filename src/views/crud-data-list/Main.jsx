@@ -12,12 +12,18 @@ import {
 import { useState, useEffect } from "react";
 import classnames from "classnames";
 import { Formcito } from "../../components/Formcito/Formcito";
+import useGetTask from "../../utils/hook/useGetTask"
 import { UseFetch } from "../../utils/hook/UseFetch";
 import { UseSendDb } from "../../utils/hook/UseSendDb";
 import { UseDelete } from "../../utils/hook/UseDelete";
+import { currentUserTokenAtom } from "../../recoil/atom/useToken";
+import { currentListId } from "../../recoil/atom/useIdList";
+import { useRecoilValue } from "recoil";
 
 function Main() {
   const [data, loading, getData] = UseFetch();
+  const [tasks, getTasks] = useGetTask()
+  
   const {newData, setNewData,handleChange, errorMessa, showModal, setShowModal, send} = UseSendDb();
   const [deleteConfirmationModal, setDeleteConfirmationModal, deleteTask] = UseDelete()
 
@@ -25,10 +31,22 @@ function Main() {
   const [dataLocal, setDataLocal] = useState({});
   const [idTask, setIdTask] = useState("");
   const [viewEdit, setViewEdit] = useState(false);
+  const listId = useRecoilValue(currentListId)
+
+  const token = useRecoilValue(currentUserTokenAtom);
+
+  const [myIdList, setMyIdList] = useState(localStorage.getItem("idList"))
  
   useEffect(() => {
-    getData();
+    getTasks(myIdList)
   }, [counter]);
+
+  useEffect(() => {
+    getData();
+    console.log(myIdList + ' id list from localStorage')
+    console.log(data + ' id list from state')
+    console.log('list id from recoil' + listId)
+  }, [])
 
   useEffect(() => {
     setDataLocal(dataLocal);
@@ -125,7 +143,7 @@ function Main() {
                 </div>
               ) : (
                 <tbody>
-                  {data.map((item, index) => (
+                  {tasks.map((item, index) => (
                     <tr key={item.id} className="intro-x">
                       <td>
                         <a
@@ -353,7 +371,7 @@ function Main() {
             <button
               type="button"
               className="btn btn-success w-24"
-              onClick={() => send(refreshUi)}
+              onClick={() => send(refreshUi, myIdList)}
             >
               Save
             </button>

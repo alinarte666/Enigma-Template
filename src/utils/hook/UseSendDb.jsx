@@ -9,8 +9,8 @@ export const UseSendDb = () => {
 
   const clearForm = () => setNewData({ title: "", completed: false });
 
-  const send = (firstF) => {
-    const param = `https://api-todos-prueba.onrender.com/api/v1/list/34/tasks`;
+  const send = (firstF, idList) => {
+    const param = `https://api-todos-prueba.onrender.com/api/v1/list/${idList}/tasks`;
     if (newData.title !== "") {
       fetch(param, {
         headers: {
