@@ -33,28 +33,32 @@ function Main() {
   };
 
   const registerUser = () => {
-    const datita = {email: dataUser.email, password: dataUser.password}
-    const param =
-      "https://api-todos-prueba.onrender.com/api/v1/users/register";
+    const datita = {
+      email: dataUser.email,
+      password: dataUser.password,
+    };
+
     if (
       dataUser.firstName &&
       dataUser.lastName &&
       dataUser.email &&
       dataUser.password
     ) {
-      fetch(param, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataUser),
-        method: "POST",
-      })
+      fetch(
+        "https://api-todos-prueba.onrender.com/api/v1/users/register",
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataUser),
+          method: "POST",
+        }
+      )
         .then((res) => {
-          console.log(res.statusText);
-          userLogin(datita);
-          createdList();
-          goToHome();
+          console.log(res.ok);
+          userLogin(datita, goToHome, res.ok)
+          
         })
         .catch((error) => console.log({ error }));
     } else {
@@ -211,8 +215,8 @@ function Main() {
                   >
                     Register
                   </button>
-                  <button className="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top" >
-                    <Link to='/'>Log In</Link>
+                  <button className="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top">
+                    <Link to="/">Log In</Link>
                   </button>
                 </div>
               </div>

@@ -30,11 +30,8 @@ function Main() {
   };
 
   const loginUser = () => {
-    const param =
-      "https://api-todos-prueba.onrender.com/api/v1/auth/login";
     if (dataUser.email && dataUser.password) {
-      userLogin(dataUser);
-      goToHome();
+       userLogin(dataUser, goToHome);
     }
   };
 

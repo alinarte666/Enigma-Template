@@ -1,10 +1,6 @@
 import React from "react";
-import { currentUserTokenAtom } from "../../recoil/atom/useToken";
-import { useRecoilValue, useRecoilState } from "recoil";
-import { currentListId } from "../../recoil/atom/useIdList";
 
 export const useCreateList = () => {
-  const token = useRecoilValue(currentUserTokenAtom);
   const [url, setUrl] = React.useState(
     "https://api-todos-prueba.onrender.com/api/v1/list/"
   );
@@ -12,15 +8,14 @@ export const useCreateList = () => {
     title: "Supermercado",
     keywords: ["carne", "lacteos", "verduras"],
   });
-  const [_, setCurrentListId] = useRecoilState(currentListId);
-
-  const createdList = () => {
-    console.log(localStorage.getItem("token"))
+  
+  const createdList = (token) => {
+    console.log(token)
     fetch(url, {
       headers: {
         Accept: "application/json",
         "Content-type": "application/json",
-        Authorization: localStorage.getItem("token"),
+        Authorization: token,
       },
       body: JSON.stringify(defaultValue),
       method: "POST",
@@ -28,7 +23,7 @@ export const useCreateList = () => {
       .then((res) => res.json())
       .then((res) => {
         console.log('lista creada correctament ' + res.list.title);
-        localStorage.setItem("idList", res.list.id)
+        
       }) 
       .catch((error) => console.log({ error }));
   };

@@ -1,33 +1,49 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import { currentListId } from "../../recoil/atom/useIdList";
-import { currentUserTokenAtom } from "../../recoil/atom/useToken";
 
 export const UseFetch = () => {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [_, setIdList] = useRecoilState(currentListId);
-
-  const getData = () => {
-
-    const param = `https://api-todos-prueba.onrender.com/api/v1/list/`;
+  
+  const getTasks = (listId, tokenc) => {
     
-    fetch(param, {
+    localStorage.setItem("idcito", listId);
+    console.log('mi tokencito getTasks ' + tokenc)
+    console.log('id de la lista ' + listId);
+
+
+    fetch(`https://api-todos-prueba.onrender.com/api/v1/list/${listId}/tasks`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token"),
+        Authorization: tokenc,
       },
       method: "GET",
     })
       .then((res) => res.json())
       .then((res) => {
-        // setData(res[0].id);
-        // console.log(res[0].id);
-        localStorage.setItem("idList", res[0].id);
-        setIdList(res[0].id);
+        setData(res);
+        console.log(res);
+      })
+      .catch((error) => console.log({ error }));
+  };
+
+  const getData = () => {
+    const myToken = localStorage.getItem("token");
+    
+   fetch('https://api-todos-prueba.onrender.com/api/v1/list/', {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: myToken,
+      },
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        getTasks(res[0].id, myToken);
+        console.log(res);
         setLoading(false);
-      });
+      });   
  };
 
   return [data, loading, getData];

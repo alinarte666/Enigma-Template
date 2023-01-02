@@ -12,46 +12,56 @@ import {
 import { useState, useEffect } from "react";
 import classnames from "classnames";
 import { Formcito } from "../../components/Formcito/Formcito";
-import useGetTask from "../../utils/hook/useGetTask"
 import { UseFetch } from "../../utils/hook/UseFetch";
 import { UseSendDb } from "../../utils/hook/UseSendDb";
 import { UseDelete } from "../../utils/hook/UseDelete";
-import { currentUserTokenAtom } from "../../recoil/atom/useToken";
-import { currentListId } from "../../recoil/atom/useIdList";
-import { useRecoilValue } from "recoil";
+
 
 function Main() {
-  const [data, loading, getData] = UseFetch();
-  const [tasks, getTasks] = useGetTask()
   
-  const {newData, setNewData,handleChange, errorMessa, showModal, setShowModal, send} = UseSendDb();
-  const [deleteConfirmationModal, setDeleteConfirmationModal, deleteTask] = UseDelete()
+  const [data, loading, getData] = UseFetch();
+  
+  const {
+    newData,
+    setNewData,
+    handleChange,
+    errorMessa,
+    showModal,
+    setShowModal,
+    send,
+  } = UseSendDb();
+  const [
+    deleteConfirmationModal,
+    setDeleteConfirmationModal,
+    deleteTask,
+  ] = UseDelete();
 
   const [counter, setCounter] = useState(1);
   const [dataLocal, setDataLocal] = useState({});
   const [idTask, setIdTask] = useState("");
   const [viewEdit, setViewEdit] = useState(false);
-  const listId = useRecoilValue(currentListId)
-
-  const token = useRecoilValue(currentUserTokenAtom);
-
-  const [myIdList, setMyIdList] = useState(localStorage.getItem("idList"))
- 
-  useEffect(() => {
-    getTasks(myIdList)
-  }, [counter]);
 
   useEffect(() => {
-    getData();
-    console.log(myIdList + ' id list from localStorage')
-    console.log(data + ' id list from state')
-    console.log('list id from recoil' + listId)
+    console.log('soy crud data list');
   }, [])
+
+  // useEffect(() => {
+
+  //   window.addEventListener("beforeunload", () => {
+  //     localStorage.clear()
+  //   });
+
+  // });
+
+  useEffect(() => {
+    getData()
+  }, [counter]);
 
   useEffect(() => {
     setDataLocal(dataLocal);
   }, [dataLocal]);
 
+  
   const getIdTask = (id) => {
     setDeleteConfirmationModal(true);
     setIdTask(id);
@@ -143,7 +153,7 @@ function Main() {
                 </div>
               ) : (
                 <tbody>
-                  {tasks.map((item, index) => (
+                  {data.map((item, index) => (
                     <tr key={item.id} className="intro-x">
                       <td>
                         <a
@@ -371,7 +381,7 @@ function Main() {
             <button
               type="button"
               className="btn btn-success w-24"
-              onClick={() => send(refreshUi, myIdList)}
+              onClick={() => send(refreshUi)}
             >
               Save
             </button>
