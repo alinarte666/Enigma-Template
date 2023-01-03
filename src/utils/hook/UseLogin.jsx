@@ -1,15 +1,19 @@
 import React from "react";
 import { useCreateList } from "./useCreateList";
+import { useRecoilState } from "recoil";
+import { currentUserAtom } from "../../recoil/atom/userAtom"
 
 export const UseLogin = () => {
+  const [_, setCurrentUser] = useRecoilState(currentUserAtom);
   const [url, setUrl] = React.useState(
     "https://api-todos-prueba.onrender.com/api/v1/auth/login"
   );
+  const [messageError, setMessageError] = React.useState("");
+  const [success, setSuccess] = React.useState(false);
   const [createdList] = useCreateList();
   const createList = localStorage.getItem("createdList");
 
   const userLogin = (dataUser, fun1, state) => {
-    console.log(dataUser)
     fetch(url, {
       headers: {
         Accept: "application/json",
@@ -20,12 +24,21 @@ export const UseLogin = () => {
     })
       .then((res) => res.json())
       .then((res) => {
+        console.log(res);
+        setCurrentUser(res)
         localStorage.setItem("token", res.accessToken);
-        {state == true ? createdList(res.accessToken) : console.log('ni pedo man')}
-        fun1()
+        {
+          state == true
+            ? createdList(res.accessToken)
+            : console.log("chale");
+        }
+        fun1();
       })
-      .catch((error) => console.log({ error }));
+      .catch((error) => {
+        console.log(error.message + " error catch");
+        setMessageError(error.message);
+      });
   };
 
-  return [userLogin];
+  return [userLogin, success];
 };

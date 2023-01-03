@@ -5,8 +5,6 @@ import logoUrl from "@/assets/images/logo.svg";
 import illustrationUrl from "@/assets/images/illustration.svg";
 import { useEffect } from "react";
 
-import { useRecoilState } from "recoil";
-import { currentUserAtom } from "../../recoil/atom/userAtom";
 import { UseDataUser } from "../../utils/hook/UseDataUser";
 import { UseLogin } from "../../utils/hook/UseLogin";
 
@@ -18,14 +16,12 @@ function Main() {
       .addClass("login");
   }, []);
 
-  const [_, setCurrentUser] = useRecoilState(currentUserAtom);
   const { handleChange, dataUser } = UseDataUser();
   const [userLogin] = UseLogin();
 
   const navigate = useNavigate();
 
   const goToHome = () => {
-    setCurrentUser(dataUser);
     navigate("/simple-menu/crud-data-list");
   };
 
