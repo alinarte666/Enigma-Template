@@ -51,7 +51,6 @@ function Main() {
         .then((res) => {
           console.log(res.ok);
           userLogin(datita, goToHome, res.ok)
-          
         })
         .catch((error) => console.log({ error }));
     } else {
