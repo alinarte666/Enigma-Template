@@ -22,49 +22,18 @@ export const UseLogin = () => {
       body: JSON.stringify(dataUser),
       method: "POST",
     })
-      .then((res) => res.json())
-      .then((res) => {
+    .then((res) => res.json()) 
+    .then((res) => {
         console.log(res);
         setCurrentUser(res)
         localStorage.setItem("token", res.accessToken);
-        {
-          state == true
-            ? createdList(res.accessToken)
-            : console.log("chale");
-        }
+        {state == true ? createdList(res.accessToken) : console.log("chale")}
         fun1();
-      })
-      .catch((error) => {
-        console.log(error.message + " error catch");
-        setMessageError(error.message);
+      }).catch(e => {
+        console.log(e)
+        setMessageError(e.message)
       });
   };
 
-  // const userLogin2 = async(dataUser, fun1, state) => {
-  //   try {
-  //     const response = await fetch(url, {
-  //       headers: {
-  //         Accept: "application/json",
-  //         "Content-type": "application/json",
-  //       },
-  //       body: JSON.stringify(dataUser),
-  //       method: "POST",
-  //     })
-  //     const newResponse = await response.json();
-  //     console.log(newResponse);
-  //     setCurrentUser(newResponse)
-  //     localStorage.setItem("token", newResponse.accessToken);
-  //     {
-  //       state == true
-  //         ? createdList(newResponse.accessToken)
-  //         : console.log("chale");
-  //     }
-  //     fun1();
-  //   } catch (error) {
-  //     console.log(error.message + " error catch");
-  //       setMessageError(error.message);
-  //   }
-  // }
-
-  return [userLogin, success]; //userLogin, 
+  return [userLogin, success]; 
 };

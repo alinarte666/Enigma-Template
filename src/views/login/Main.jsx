@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
+import {LoadingIcon} from "@/base-components"
 import dom from "@left4code/tw-starter/dist/js/dom";
 import logoUrl from "@/assets/images/logo.svg";
 import illustrationUrl from "@/assets/images/illustration.svg";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { UseDataUser } from "../../utils/hook/UseDataUser";
 import { UseLogin } from "../../utils/hook/UseLogin";
@@ -16,18 +17,23 @@ function Main() {
       .addClass("login");
   }, []);
 
-  const { handleChange, dataUser } = UseDataUser();
+  const [loading, setLoading] = useState(false)
+
+  const { handleChange, dataUser, error, setError } = UseDataUser();
   const [userLogin] = UseLogin();
 
   const navigate = useNavigate();
-
+  
   const goToHome = () => {
     navigate("/simple-menu/crud-data-list");
   };
 
   const loginUser = () => {
     if (dataUser.email && dataUser.password) {
+       setLoading(true)
        userLogin(dataUser, goToHome);
+    } else {
+      setError(true)
     }
     
   };
@@ -69,7 +75,7 @@ function Main() {
             {/* END: Login Info */}
             {/* BEGIN: Login Form */}
             <div className="h-screen xl:h-auto flex py-5 xl:py-0 my-10 xl:my-0">
-              <div className="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-0 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto">
+              <div className="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-0 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto relative">
                 <h2 className="intro-x font-bold text-2xl xl:text-3xl text-center xl:text-left">
                   Sign In
                 </h2>
@@ -110,6 +116,11 @@ function Main() {
                   </div>
                   <a href="">Forgot Password?</a>
                 </div>
+                {error && (
+                  <div className="my-auto text-pink-600 text-[20px] text-center">
+                    Contraseña y/o correo incorrecto, intenta de nuevo
+                  </div>
+                )}
                 <div className="intro-x mt-5 xl:mt-8 text-center xl:text-left">
                   <button
                     className="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top"
@@ -137,10 +148,15 @@ function Main() {
                     Privacy Policy
                   </a>
                 </div>
+                {loading && <div className="w-full h-[80px] flex justify-center absolute z-50 top-[42%] items-center">
+                <LoadingIcon icon="tail-spin" className="w-8 h-8" />
+              </div>}
               </div>
+              
             </div>
             {/* END: Login Form */}
           </div>
+          
         </div>
       </div>
     </>
