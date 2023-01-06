@@ -12,8 +12,9 @@ export const Formcito = ({ task, saySome, refreshUi }) => {
     setNewData({ ...newData, [name]: value }); //id: task[0].id
 
   const handleSubmit = () => {
-    const param = `https://api-todos-prueba.onrender.com/api/v1/list/34/tasks/${idTask}`;
-    fetch(param, {
+    const idLista = localStorage.getItem("idcito");
+    console.log(idLista);
+    fetch(`https://api-todos-prueba.onrender.com/api/v1/list/${idLista}/tasks/${idTask}`, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -25,9 +26,10 @@ export const Formcito = ({ task, saySome, refreshUi }) => {
       }),
       method: "PATCH",
     }).then((res) => {
-      console.log(res.status);
+      console.log(res);
       refreshUi();
-    });
+    })
+    .catch(e => console.log({e}))
     saySome();
   };
 

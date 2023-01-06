@@ -16,24 +16,52 @@ import { UseFetch } from "../../utils/hook/UseFetch";
 import { UseSendDb } from "../../utils/hook/UseSendDb";
 import { UseDelete } from "../../utils/hook/UseDelete";
 
+
 function Main() {
+  
   const [data, loading, getData] = UseFetch();
-  const {newData, setNewData,handleChange, errorMessa, showModal, setShowModal, send} = UseSendDb();
-  const [deleteConfirmationModal, setDeleteConfirmationModal, deleteTask] = UseDelete()
+  
+  const {
+    newData,
+    setNewData,
+    handleChange,
+    errorMessa,
+    showModal,
+    setShowModal,
+    send,
+  } = UseSendDb();
+  const [
+    deleteConfirmationModal,
+    setDeleteConfirmationModal,
+    deleteTask,
+  ] = UseDelete();
 
   const [counter, setCounter] = useState(1);
   const [dataLocal, setDataLocal] = useState({});
   const [idTask, setIdTask] = useState("");
   const [viewEdit, setViewEdit] = useState(false);
- 
+
   useEffect(() => {
-    getData();
+    console.log('soy crud data list');
+  }, [])
+
+  // useEffect(() => {
+
+  //   window.addEventListener("beforeunload", () => {
+  //     localStorage.clear()
+  //   });
+
+  // });
+
+  useEffect(() => {
+    getData()
   }, [counter]);
 
   useEffect(() => {
     setDataLocal(dataLocal);
   }, [dataLocal]);
 
+  
   const getIdTask = (id) => {
     setDeleteConfirmationModal(true);
     setIdTask(id);

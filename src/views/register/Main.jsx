@@ -1,13 +1,64 @@
+import { Link, useNavigate } from "react-router-dom";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import logoUrl from "@/assets/images/logo.svg";
 import illustrationUrl from "@/assets/images/illustration.svg";
-import { useEffect } from "react";
+import {LoadingIcon} from "@/base-components"
+import { useEffect, useState } from "react";
+
+import { UseDataUser } from "../../utils/hook/UseDataUser";
+import { UseLogin } from "../../utils/hook/UseLogin";
 
 function Main() {
+  const { handleChange, dataUser, error, setError } = UseDataUser();
+  const [userLogin] = UseLogin();
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate();
+
   useEffect(() => {
-    dom("body").removeClass("main").removeClass("error-page").addClass("login");
+    dom("body")
+      .removeClass("main")
+      .removeClass("error-page")
+      .addClass("login");
   }, []);
+
+  const goToHome = () => {
+    navigate("/simple-menu/crud-data-list");
+  };
+
+  const registerUser = () => {
+    const datita = {
+      email: dataUser.email,
+      password: dataUser.password,
+    };
+    
+    if (
+      dataUser.firstName &&
+      dataUser.lastName &&
+      dataUser.email &&
+      dataUser.password
+    ) {
+      setLoading(true)
+      fetch(
+        "https://api-todos-prueba.onrender.com/api/v1/users/register",
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataUser),
+          method: "POST",
+        }
+      )
+        .then((res) => {
+          console.log(res.ok);
+          userLogin(datita, goToHome, res.ok)
+        })
+        .catch((error) => console.log({ error }));
+    } else {
+      setError(true);
+    }
+  };
 
   return (
     <>
@@ -23,7 +74,10 @@ function Main() {
                   className="w-6"
                   src={logoUrl}
                 />
-                <span className="text-white text-lg ml-3"> Enigma </span>
+                <span className="text-white text-lg ml-3">
+                  {" "}
+                  Enigma{" "}
+                </span>
               </a>
               <div className="my-auto">
                 <img
@@ -43,40 +97,78 @@ function Main() {
             {/* END: Register Info */}
             {/* BEGIN: Register Form */}
             <div className="h-screen xl:h-auto flex py-5 xl:py-0 my-10 xl:my-0">
-              <div className="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-0 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto">
+              <div className="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-0 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto relative">
                 <h2 className="intro-x font-bold text-2xl xl:text-3xl text-center xl:text-left">
                   Sign Up
                 </h2>
                 <div className="intro-x mt-2 text-slate-400 dark:text-slate-400 xl:hidden text-center">
-                  A few more clicks to sign in to your account. Manage all your
-                  e-commerce accounts in one place
+                  A few more clicks to sign in to your account. Manage
+                  all your e-commerce accounts in one place
                 </div>
                 <div className="intro-x mt-8">
                   <input
                     type="text"
                     className="intro-x login__input form-control py-3 px-4 block"
                     placeholder="First Name"
+                    name="firstName"
+                    onChange={handleChange}
                   />
                   <input
                     type="text"
                     className="intro-x login__input form-control py-3 px-4 block mt-4"
                     placeholder="Last Name"
+                    name="lastName"
+                    onChange={handleChange}
                   />
                   <input
-                    type="text"
+                    type="email"
                     className="intro-x login__input form-control py-3 px-4 block mt-4"
                     placeholder="Email"
+                    name="email"
+                    onChange={handleChange}
+                    autoComplete="off"
                   />
                   <input
-                    type="text"
+                    type="password"
                     className="intro-x login__input form-control py-3 px-4 block mt-4"
                     placeholder="Password"
+                    name="password"
+                    onChange={handleChange}
+                    autoComplete="off"
                   />
                   <div className="intro-x w-full grid grid-cols-12 gap-4 h-1 mt-3">
-                    <div className="col-span-3 h-full rounded bg-success"></div>
-                    <div className="col-span-3 h-full rounded bg-success"></div>
-                    <div className="col-span-3 h-full rounded bg-success"></div>
-                    <div className="col-span-3 h-full rounded bg-slate-100 dark:bg-darkmode-800"></div>
+                    <div
+                      className={`col-span-3 h-full rounded ${
+                        dataUser.password &&
+                        dataUser.password.length > 1
+                          ? "bg-success"
+                          : "bg-pink-600"
+                      }`}
+                    ></div>
+                    <div
+                      className={`col-span-3 h-full rounded ${
+                        dataUser.password &&
+                        dataUser.password.length > 2
+                          ? "bg-success"
+                          : "bg-pink-600"
+                      }`}
+                    ></div>
+                    <div
+                      className={`col-span-3 h-full rounded ${
+                        dataUser.password &&
+                        dataUser.password.length > 3
+                          ? "bg-success"
+                          : "bg-pink-600"
+                      }`}
+                    ></div>
+                    <div
+                      className={`col-span-3 h-full rounded ${
+                        dataUser.password &&
+                        dataUser.password.length > 4
+                          ? "bg-success"
+                          : "bg-pink-600"
+                      }`}
+                    ></div>
                   </div>
                   <a
                     href=""
@@ -84,13 +176,8 @@ function Main() {
                   >
                     What is a secure password?
                   </a>
-                  <input
-                    type="text"
-                    className="intro-x login__input form-control py-3 px-4 block mt-4"
-                    placeholder="Password Confirmation"
-                  />
                 </div>
-                <div className="intro-x flex items-center text-slate-600 dark:text-slate-500 mt-4 text-xs sm:text-sm">
+                <div className="intro-x flex items-center text-slate-600 dark:text-slate-500 my-4 text-xs sm:text-sm">
                   <input
                     id="remember-me"
                     type="checkbox"
@@ -102,20 +189,35 @@ function Main() {
                   >
                     I agree to the Envato
                   </label>
-                  <a className="text-primary dark:text-slate-200 ml-1" href="">
+                  <a
+                    className="text-primary dark:text-slate-200 ml-1"
+                    href=""
+                  >
                     Privacy Policy
                   </a>
                   .
                 </div>
+                {error && (
+                  <div className="my-auto text-pink-600 text-[20px] text-center">
+                    Intenta de nuevo, rellena todos los campos 
+                  </div>
+                )}
                 <div className="intro-x mt-5 xl:mt-8 text-center xl:text-left">
-                  <button className="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">
+                  <button
+                    className="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top"
+                    onClick={registerUser}
+                  >
                     Register
                   </button>
                   <button className="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top">
-                    Sign in
+                    <Link to="/">Log In</Link>
                   </button>
                 </div>
+                {loading && <div className="w-full h-[80px] flex justify-center absolute z-50 top-[48%] items-center">
+                <LoadingIcon icon="tail-spin" className="w-8 h-8" />
+              </div>}
               </div>
+              
             </div>
             {/* END: Register Form */}
           </div>

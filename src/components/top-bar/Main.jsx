@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { currentUserAtom } from "../../recoil/atom/userAtom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Lucide,
   Dropdown,
@@ -10,7 +12,7 @@ import {
   DropdownHeader,
   DropdownDivider,
 } from "@/base-components";
-import me from '../../assets/images/me.jpg'
+import me from "../../assets/images/me.jpg";
 import logoUrl from "@/assets/images/logo.svg";
 import { faker as $f } from "@/utils";
 import * as $_ from "lodash";
@@ -25,12 +27,18 @@ function Main(props) {
   const hideSearchDropdown = () => {
     setSearchDropdown(false);
   };
+  const [_, setCurrentUser] = useRecoilState(currentUserAtom);
+
+  const logOut = () => {
+   setCurrentUser("");
+    //navigate('/register');
+  };
 
   return (
     <>
       {/* BEGIN: Top Bar */}
       <div
-        className={`${props.className} top-bar-boxed h-[70px] md:h-[65px] z-[51] border-b border-white/[0.08] mt-12 md:mt-0 -mx-3 sm:-mx-8 md:-mx-0 px-3 md:border-b-0 relative md:fixed md:inset-x-0 md:top-0 sm:px-8 md:px-10 md:pt-10 md:bg-gradient-to-b md:from-slate-100 md:to-transparent dark:md:from-darkmode-700`}
+        className={`${props.className} z-[51] top-bar-boxed h-[70px] md:h-[65px]  border-b border-white/[0.08] mt-12 md:mt-0 -mx-3 sm:-mx-8 md:-mx-0 px-3 md:border-b-0 relative md:fixed md:inset-x-0 md:top-0 sm:px-8 md:px-10 md:pt-10 md:bg-gradient-to-b md:from-slate-100 md:to-transparent dark:md:from-darkmode-700`}
       >
         <div className="h-full flex items-center">
           {/* BEGIN: Logo */}
@@ -43,16 +51,25 @@ function Main(props) {
               className="logo__image w-6"
               src={logoUrl}
             />
-            <span className="logo__text text-white text-lg ml-3"> Enigma </span>
+            <span className="logo__text text-white text-lg ml-3">
+              {" "}
+              Enigma{" "}
+            </span>
           </Link>
           {/* END: Logo */}
           {/* BEGIN: Breadcrumb */}
-          <nav aria-label="breadcrumb" className="-intro-x h-[45px] mr-auto">
+          <nav
+            aria-label="breadcrumb"
+            className="-intro-x h-[45px] mr-auto"
+          >
             <ol className="breadcrumb breadcrumb-light">
               <li className="breadcrumb-item">
                 <a href="#">Application</a>
               </li>
-              <li className="breadcrumb-item active" aria-current="page">
+              <li
+                className="breadcrumb-item active"
+                aria-current="page"
+              >
                 Dashboard
               </li>
             </ol>
@@ -86,7 +103,9 @@ function Main(props) {
               })}
             >
               <div className="search-result__content">
-                <div className="search-result__content__title">Pages</div>
+                <div className="search-result__content__title">
+                  Pages
+                </div>
                 <div className="mb-5">
                   <a href="" className="flex items-center">
                     <div className="w-8 h-8 bg-success/20 dark:bg-success/10 text-success flex items-center justify-center rounded-full">
@@ -107,7 +126,9 @@ function Main(props) {
                     <div className="ml-3">Transactions Report</div>
                   </a>
                 </div>
-                <div className="search-result__content__title">Users</div>
+                <div className="search-result__content__title">
+                  Users
+                </div>
                 <div className="mb-5">
                   {$_.take($f(), 4).map((faker, fakerKey) => (
                     <a
@@ -122,16 +143,24 @@ function Main(props) {
                           src={faker.photos[0]}
                         />
                       </div>
-                      <div className="ml-3">{faker.users[0].name}</div>
+                      <div className="ml-3">
+                        {faker.users[0].name}
+                      </div>
                       <div className="ml-auto w-48 truncate text-slate-500 text-xs text-right">
                         {faker.users[0].email}
                       </div>
                     </a>
                   ))}
                 </div>
-                <div className="search-result__content__title">Products</div>
+                <div className="search-result__content__title">
+                  Products
+                </div>
                 {$_.take($f(), 4).map((faker, fakerKey) => (
-                  <a key={fakerKey} href="" className="flex items-center mt-2">
+                  <a
+                    key={fakerKey}
+                    href=""
+                    className="flex items-center mt-2"
+                  >
                     <div className="w-8 h-8 image-fit">
                       <img
                         alt="Midone Tailwind HTML Admin Template"
@@ -139,7 +168,9 @@ function Main(props) {
                         src={faker.images[0]}
                       />
                     </div>
-                    <div className="ml-3">{faker.products[0].name}</div>
+                    <div className="ml-3">
+                      {faker.products[0].name}
+                    </div>
                     <div className="ml-auto w-48 truncate text-slate-500 text-xs text-right">
                       {faker.products[0].category}
                     </div>
@@ -162,8 +193,13 @@ function Main(props) {
               />
             </DropdownToggle>
             <DropdownMenu className="notification-content pt-2">
-              <DropdownContent tag="div" className="notification-content__box">
-                <div className="notification-content__title">Notifications</div>
+              <DropdownContent
+                tag="div"
+                className="notification-content__box"
+              >
+                <div className="notification-content__title">
+                  Notifications
+                </div>
                 {$_.take($f(), 5).map((faker, fakerKey) => (
                   <div
                     key={fakerKey}
@@ -182,7 +218,10 @@ function Main(props) {
                     </div>
                     <div className="ml-2 overflow-hidden">
                       <div className="flex items-center">
-                        <a href="" className="font-medium truncate mr-5">
+                        <a
+                          href=""
+                          className="font-medium truncate mr-5"
+                        >
                           {faker.users[0].name}
                         </a>
                         <div className="text-xs text-slate-400 ml-auto whitespace-nowrap">
@@ -212,7 +251,9 @@ function Main(props) {
               />
             </DropdownToggle>
             <DropdownMenu className="w-56">
-              <DropdownContent className="bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white">
+              <DropdownContent
+                className="bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white"
+              >
                 <DropdownHeader tag="div" className="!font-normal">
                   <div className="font-medium">Alex Cruz</div>
                   <div className="text-xs text-white/70 mt-0.5 dark:text-slate-500">
@@ -221,20 +262,34 @@ function Main(props) {
                 </DropdownHeader>
                 <DropdownDivider className="border-white/[0.08]" />
                 <DropdownItem className="hover:bg-white/5">
-                  <Lucide icon="User" className="w-4 h-4 mr-2" /> Profile
+                  <Lucide icon="User" className="w-4 h-4 mr-2" />{" "}
+                  Profile
                 </DropdownItem>
                 <DropdownItem className="hover:bg-white/5">
-                  <Lucide icon="Edit" className="w-4 h-4 mr-2" /> Add Account
+                  <Lucide icon="Edit" className="w-4 h-4 mr-2" /> Add
+                  Account
                 </DropdownItem>
                 <DropdownItem className="hover:bg-white/5">
-                  <Lucide icon="Lock" className="w-4 h-4 mr-2" /> Reset Password
+                  <Lucide icon="Lock" className="w-4 h-4 mr-2" />{" "}
+                  Reset Password
                 </DropdownItem>
                 <DropdownItem className="hover:bg-white/5">
-                  <Lucide icon="HelpCircle" className="w-4 h-4 mr-2" /> Help
+                  <Lucide
+                    icon="HelpCircle"
+                    className="w-4 h-4 mr-2"
+                  />{" "}
+                  Help
                 </DropdownItem>
                 <DropdownDivider className="border-white/[0.08]" />
-                <DropdownItem className="hover:bg-white/5">
-                  <Lucide icon="ToggleRight" className="w-4 h-4 mr-2" /> Logout
+                <DropdownItem
+                  className="hover:bg-white/5"
+                  onClick={logOut}
+                >
+                  <Lucide
+                    icon="ToggleRight"
+                    className="w-4 h-4 mr-2"
+                  />{" "}
+                  Logout
                 </DropdownItem>
               </DropdownContent>
             </DropdownMenu>

@@ -4,6 +4,7 @@ import {
   useEffect,
   createContext,
   useContext,
+  useState
 } from "react";
 import { createPortal } from "react-dom";
 import "@left4code/tw-starter/dist/js/dropdown";
@@ -11,15 +12,22 @@ import PropTypes from "prop-types";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import { useLocation } from "react-router-dom";
 
+
 const init = (el, props) => {
+  const view = localStorage.getItem("clicked");
   const dropdown = tailwind.Dropdown.getOrCreateInstance(el);
+  console.log(dropdown)
   setTimeout(() => {
-    const isDropdownShowed = dom(el).find("[data-dropdown-replacer]").length;
+    const isDropdownShowed = dom(el).find(
+      "[data-dropdown-replacer]"
+    ).length;
     if (props.show && !isDropdownShowed) {
       dropdown.show();
+      console.log('me esto ejecutando dropdown.show');
     } else if (!props.show && isDropdownShowed) {
-      dropdown.hide();
-    }
+      dropdown.hide(); 
+      console.log('me esto ejecutando dropdown.hide');
+    } 
   });
 
   if (el["__initiated"] === undefined) {
@@ -52,6 +60,7 @@ function Dropdown(props) {
   // On prop change
   useEffect(() => {
     init(dropdownRef.current, props);
+    localStorage.setItem("clicked", false)
   }, [props.show, location]);
 
   return createElement(
@@ -69,7 +78,9 @@ function Dropdown(props) {
       typeof props.children === "function"
         ? props.children({
             dismiss: () => {
-              tailwind.Dropdown.getOrCreateInstance(dropdownRef.current).hide();
+              tailwind.Dropdown.getOrCreateInstance(
+                dropdownRef.current
+              ).hide();
             },
           })
         : props.children
@@ -103,6 +114,9 @@ function DropdownToggle(props) {
     {
       ...computedProps,
       className: `dropdown-toggle cursor-pointer ${props.className}`,
+      onClick: () => {
+        console.log(props);
+      },
       "aria-expanded": false,
       "data-tw-toggle": "dropdown",
     },
@@ -167,16 +181,16 @@ DropdownContent.defaultProps = {
 function DropdownItem(props) {
   const { tag, className, ...computedProps } = props;
   return createElement(
-    "li",
-    {
+    "li",{
       ...computedProps,
     },
     createElement(
       props.tag,
       {
         className: `dropdown-item cursor-pointer ${props.className}`,
+        onClick: () => {localStorage.setItem("clicked", true)}, //() => {console.log('clicked')} //TODO
       },
-      props.children
+       props.children
     )
   );
 }

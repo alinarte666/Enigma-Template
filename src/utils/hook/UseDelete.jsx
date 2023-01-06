@@ -4,7 +4,9 @@ export const UseDelete = () => {
     const [deleteConfirmationModal, setDeleteConfirmationModal] = React.useState(false);
 
     const deleteTask = (taskId, firstF) => {
-        const param = `https://api-todos-prueba.onrender.com/api/v1/list/34/tasks/${taskId}`;
+      const idLista = localStorage.getItem("idcito");
+      console.log(idLista)
+        const param = `https://api-todos-prueba.onrender.com/api/v1/list/${idLista}/tasks/${taskId}`;
         fetch(param, {
           headers: {
             Accept: "application/json",
