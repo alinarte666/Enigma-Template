@@ -20,22 +20,34 @@ function Main() {
   const [loading, setLoading] = useState(false)
 
   const { handleChange, dataUser, error, setError } = UseDataUser();
-  const [userLogin] = UseLogin();
+  const [userLogin, messageError, setMessageError] = UseLogin();
 
   const navigate = useNavigate();
   
+  useEffect(() => {
+    setTimeout(() => {
+      setMessageError(false);
+      setLoading(false);
+    }, 3000)
+  }, [messageError])
+
+  useEffect(() => {
+    setTimeout(() => {
+      setError(false)
+    }, 3000)
+  },[error])
+
   const goToHome = () => {
     navigate("/simple-menu/crud-data-list");
   };
 
   const loginUser = () => {
     if (dataUser.email && dataUser.password) {
-       setLoading(true)
-       userLogin(dataUser, goToHome);
+        setLoading(true)
+        userLogin(dataUser, goToHome);
     } else {
       setError(true)
     }
-    
   };
 
   return (
@@ -116,9 +128,14 @@ function Main() {
                   </div>
                   <a href="">Forgot Password?</a>
                 </div>
+                {messageError && (
+                  <div className="my-auto text-pink-600 text-[20px] text-center mt-2">
+                   Credenciales incorrectas :(
+                  </div>
+                )}
                 {error && (
-                  <div className="my-auto text-pink-600 text-[20px] text-center">
-                    Contraseña y/o correo incorrecto, intenta de nuevo
+                  <div className="my-auto text-pink-600 text-[20px] text-center mt-2">
+                   Rellena los campos
                   </div>
                 )}
                 <div className="intro-x mt-5 xl:mt-8 text-center xl:text-left">
