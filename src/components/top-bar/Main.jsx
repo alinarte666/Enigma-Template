@@ -27,12 +27,10 @@ function Main(props) {
   const hideSearchDropdown = () => {
     setSearchDropdown(false);
   };
-  const [_, setCurrentUser] = useRecoilState(currentUserAtom);
+  const [user, setCurrentUser] = useRecoilState(currentUserAtom);
 
-  const logOut = () => {
-   setCurrentUser("");
-    //navigate('/register');
-  };
+  const logOut = () => setCurrentUser("");
+  
 
   return (
     <>
@@ -255,9 +253,9 @@ function Main(props) {
                 className="bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white"
               >
                 <DropdownHeader tag="div" className="!font-normal">
-                  <div className="font-medium">Alex Cruz</div>
+                  <div className="font-medium">{user.user.firstName}</div>
                   <div className="text-xs text-white/70 mt-0.5 dark:text-slate-500">
-                    Frontend Trainner
+                    Tu posicion n.n
                   </div>
                 </DropdownHeader>
                 <DropdownDivider className="border-white/[0.08]" />
