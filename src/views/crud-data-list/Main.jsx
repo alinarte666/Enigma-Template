@@ -45,14 +45,6 @@ function Main() {
     console.log('soy crud data list');
   }, [])
 
-  // useEffect(() => {
-
-  //   window.addEventListener("beforeunload", () => {
-  //     localStorage.clear()
-  //   });
-
-  // });
-
   useEffect(() => {
     getData()
   }, [counter]);
@@ -194,7 +186,7 @@ function Main() {
                           <a
                             className="flex items-center text-danger"
                             href="#"
-                            onClick={() => getIdTask(item.id)}
+                            onClick={() => getIdTask(item)}
                           >
                             <Lucide
                               icon="Trash2"
@@ -296,7 +288,7 @@ function Main() {
             />
             <div className="text-3xl mt-5">Are you sure?</div>
             <div className="text-slate-500 mt-2">
-              Do you really want to delete these records? <br />
+              Do you really want to delete <span className="font-bold text-lg">{idTask.title}</span>? <br />
               This process cannot be undone.
             </div>
           </div>
@@ -313,7 +305,7 @@ function Main() {
             <button
               type="button"
               className="btn btn-danger w-24"
-              onClick={() => deleteTask(idTask, refreshUi)}
+              onClick={() => deleteTask(idTask.id, refreshUi)}
             >
               Delete
             </button>
@@ -334,7 +326,7 @@ function Main() {
             <h1 className="text-left hidden text-lg">
               Agrega tu Tarea
             </h1>
-            <form>
+            
               <label className="flex flex-col gap-2 items-center text-[25px] w-full">
                 Title:
                 <input
@@ -343,6 +335,7 @@ function Main() {
                   className="bg-transparent outline-none border-b-2 "
                   value={newData.title}
                   onChange={handleChange}
+                  autoFocus={true}
                 />
               </label>
               <div className="mt-3 text-[25px]">
@@ -351,7 +344,8 @@ function Main() {
                   <input
                     type="checkbox"
                     className="form-check-input"
-                    defaultChecked={false}
+                    defaultChecked={newData.completed} 
+                    value={newData.completed}
                     onChange={(e) =>
                       setNewData({
                         ...newData,
@@ -361,7 +355,7 @@ function Main() {
                   />
                 </div>
               </div>
-            </form>
+           
           </div>
           {newData.title.length < 4 && (
             <span className="text-red-700 block text-center pb-2 text-sm">

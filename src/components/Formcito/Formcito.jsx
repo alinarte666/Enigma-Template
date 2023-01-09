@@ -47,6 +47,7 @@ export const Formcito = ({ task, saySome, refreshUi }) => {
             onChange={handleChange}
             type="text"
             className="form-control w-full"
+            autoFocus='true'
           />
         </div>
 
