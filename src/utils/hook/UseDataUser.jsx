@@ -5,6 +5,6 @@ export const UseDataUser = () => {
     const [error, setError] = React.useState(false);
 
     const handleChange = ({ target: { name, value } }) => setDataUser({ ...dataUser, [name]: value });
-
+    
     return {handleChange, dataUser, error, setError}
 }
