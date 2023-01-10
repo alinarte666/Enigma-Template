@@ -65,7 +65,7 @@ function Main() {
   };
 
   const refreshUi = () => setCounter(counter + 1);
-  const changeViewTwo = () => setViewEdit(false);
+  //const changeViewTwo = () => setViewEdit(false);
 
   return (
     <>
@@ -202,14 +202,13 @@ function Main() {
               )}
             </table>
           )}
-
-          {viewEdit && (
-            <Formcito
-              saySome={changeViewTwo}
+          {viewEdit && <Formcito
+              //saySome={changeViewTwo}
+              viewEdit={viewEdit}
+              setViewEdit={setViewEdit}
               task={dataLocal}
               refreshUi={refreshUi}
-            />
-          )}
+            />}
         </div>
         {/* END: Data List */}
         {/* BEGIN: Pagination */}
@@ -313,7 +312,7 @@ function Main() {
         </ModalBody>
       </Modal>
       {/* END: Delete Confirmation Modal */}
-
+      
       {/* BEGIN: Add Task Modal */}
       <Modal
         show={showModal}
