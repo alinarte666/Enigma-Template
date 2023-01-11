@@ -16,11 +16,9 @@ import { UseFetch } from "../../utils/hook/UseFetch";
 import { UseSendDb } from "../../utils/hook/UseSendDb";
 import { UseDelete } from "../../utils/hook/UseDelete";
 
-
 function Main() {
-  
   const [data, loading, getData] = UseFetch();
-  
+
   const {
     newData,
     setNewData,
@@ -40,20 +38,29 @@ function Main() {
   const [dataLocal, setDataLocal] = useState({});
   const [idTask, setIdTask] = useState("");
   const [viewEdit, setViewEdit] = useState(false);
+  const [successModalAdd, setSuccessModalAdd] = useState(false);
+  const [successModalEdit, setSuccessModalEdit] = useState(false);
 
   useEffect(() => {
-    console.log('soy crud data list');
-  }, [])
+    setTimeout(() => {
+      setSuccessModalAdd(false);
+    }, 2500);
+  }, [successModalAdd]);
 
   useEffect(() => {
-    getData()
+    setTimeout(() => {
+      setSuccessModalEdit(false);
+    }, 2500);
+  }, [successModalEdit]);
+
+  useEffect(() => {
+    getData();
   }, [counter]);
 
   useEffect(() => {
     setDataLocal(dataLocal);
   }, [dataLocal]);
 
-  
   const getIdTask = (id) => {
     setDeleteConfirmationModal(true);
     setIdTask(id);
@@ -65,7 +72,8 @@ function Main() {
   };
 
   const refreshUi = () => setCounter(counter + 1);
-  //const changeViewTwo = () => setViewEdit(false);
+
+  const closedModalSuccess = () => setSuccessModalAdd(true);
 
   return (
     <>
@@ -202,13 +210,15 @@ function Main() {
               )}
             </table>
           )}
-          {viewEdit && <Formcito
-              //saySome={changeViewTwo}
+          {viewEdit && (
+            <Formcito
+              setSuccessModal={setSuccessModalEdit}
               viewEdit={viewEdit}
               setViewEdit={setViewEdit}
               task={dataLocal}
               refreshUi={refreshUi}
-            />}
+            />
+          )}
         </div>
         {/* END: Data List */}
         {/* BEGIN: Pagination */}
@@ -287,7 +297,11 @@ function Main() {
             />
             <div className="text-3xl mt-5">Are you sure?</div>
             <div className="text-slate-500 mt-2">
-              Do you really want to delete <span className="font-bold text-lg">{idTask.title}</span>? <br />
+              Do you really want to delete{" "}
+              <span className="font-bold text-lg">
+                {idTask.title}
+              </span>
+              ? <br />
               This process cannot be undone.
             </div>
           </div>
@@ -312,7 +326,7 @@ function Main() {
         </ModalBody>
       </Modal>
       {/* END: Delete Confirmation Modal */}
-      
+
       {/* BEGIN: Add Task Modal */}
       <Modal
         show={showModal}
@@ -325,36 +339,35 @@ function Main() {
             <h1 className="text-left hidden text-lg">
               Agrega tu Tarea
             </h1>
-            
-              <label className="flex flex-col gap-2 items-center text-[25px] w-full">
-                Title:
+
+            <label className="flex flex-col gap-2 items-center text-[25px] w-full">
+              Title:
+              <input
+                type="text"
+                name="title"
+                className="bg-transparent outline-none border-b-2 "
+                value={newData.title}
+                onChange={handleChange}
+                autoFocus={true}
+              />
+            </label>
+            <div className="mt-3 text-[25px]">
+              <label>Completed:</label>
+              <div className="form-switch mt-2">
                 <input
-                  type="text"
-                  name="title"
-                  className="bg-transparent outline-none border-b-2 "
-                  value={newData.title}
-                  onChange={handleChange}
-                  autoFocus={true}
+                  type="checkbox"
+                  className="form-check-input"
+                  defaultChecked={newData.completed}
+                  value={newData.completed}
+                  onChange={(e) =>
+                    setNewData({
+                      ...newData,
+                      completed: e.target.checked,
+                    })
+                  }
                 />
-              </label>
-              <div className="mt-3 text-[25px]">
-                <label>Completed:</label>
-                <div className="form-switch mt-2">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    defaultChecked={newData.completed} 
-                    value={newData.completed}
-                    onChange={(e) =>
-                      setNewData({
-                        ...newData,
-                        completed: e.target.checked,
-                      })
-                    }
-                  />
-                </div>
               </div>
-           
+            </div>
           </div>
           {newData.title.length < 4 && (
             <span className="text-red-700 block text-center pb-2 text-sm">
@@ -374,7 +387,9 @@ function Main() {
             <button
               type="button"
               className="btn btn-success w-24"
-              onClick={() => send(refreshUi)}
+              onClick={() => {
+                send(refreshUi, closedModalSuccess);
+              }}
             >
               Save
             </button>
@@ -382,6 +397,46 @@ function Main() {
         </ModalBody>
       </Modal>
       {/* END: Add Task Modal */}
+
+      {/* Begin: Success add task Modal */}
+      <Modal
+        show={successModalAdd}
+        onHidden={() => setSuccessModalAdd(false)}
+      >
+        <ModalBody className="p-0">
+          <div className="p-5 text-center">
+            <Lucide
+              icon="CheckCircle"
+              className="w-16 h-16 text-success mx-auto mt-3"
+            />
+            <div className="text-3xl mt-5">Good job!</div>
+            <div className="text-slate-500 mt-2">
+              You've add your task!
+            </div>
+          </div>
+        </ModalBody>
+      </Modal>
+      {/* END: Success add task Modal */}
+
+      {/* Begin: Success edit task Modal */}
+      <Modal
+        show={successModalEdit}
+        onHidden={() => setSuccessModalEdit(false)}
+      >
+        <ModalBody className="p-0">
+          <div className="p-5 text-center">
+            <Lucide
+              icon="CheckCircle"
+              className="w-16 h-16 text-success mx-auto mt-3"
+            />
+            <div className="text-3xl mt-5">Good job!</div>
+            <div className="text-slate-500 mt-2">
+              you edited your homework!
+            </div>
+          </div>
+        </ModalBody>
+      </Modal>
+      {/* End: Success edit task Modal */}
     </>
   );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import {Modal, ModalBody} from '@/base-components'
 
-export const Formcito = ({ task, viewEdit, setViewEdit, refreshUi }) => {
+export const Formcito = ({ task, viewEdit, setViewEdit, refreshUi, setSuccessModal}) => {
   const [newData, setNewData] = React.useState(task[0]);
   const [idTask, setIdTask] = React.useState("");
 
@@ -28,6 +28,7 @@ export const Formcito = ({ task, viewEdit, setViewEdit, refreshUi }) => {
       method: "PATCH",
     }).then((res) => {
       console.log(res);
+      setSuccessModal(true)
       refreshUi();
     })
     .catch(e => console.log({e}))
