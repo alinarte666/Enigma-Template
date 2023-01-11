@@ -15,10 +15,10 @@ export const UseSendDb = () => {
 
   const clearForm = () => setNewData({ title: "", completed: false });
 
-  const send = (firstF) => {
+  const send = (firstF, seconF) => {
     const idLista = localStorage.getItem("idcito");
     console.log(idLista)
-    if (newData.title !== "") {
+    if (newData.title !== "" && newData.title.length > 2) {
       fetch(
         `https://api-todos-prueba.onrender.com/api/v1/list/${idLista}/tasks`,
         {
@@ -34,6 +34,7 @@ export const UseSendDb = () => {
         .then((res) => {
           console.log(res.statusText);
           firstF();
+          seconF();
           clearForm();
         })
         .catch((error) => console.log({ error }));

@@ -1,6 +1,7 @@
 import React from "react";
+import {Modal, ModalBody} from '@/base-components'
 
-export const Formcito = ({ task, saySome, refreshUi }) => {
+export const Formcito = ({ task, viewEdit, setViewEdit, refreshUi, setSuccessModal}) => {
   const [newData, setNewData] = React.useState(task[0]);
   const [idTask, setIdTask] = React.useState("");
 
@@ -27,15 +28,21 @@ export const Formcito = ({ task, saySome, refreshUi }) => {
       method: "PATCH",
     }).then((res) => {
       console.log(res);
+      setSuccessModal(true)
       refreshUi();
     })
     .catch(e => console.log({e}))
-    saySome();
+    setViewEdit(false);
   };
 
   return (
-    <div className="w-[500px] h-[600px] absolute z-50 left-[25%] -top-[160px] flex flex-col  justify-around items-center">
-      <form className="intro-y  box p-5">
+    <Modal 
+      show={viewEdit}
+      onHidden={() => setViewEdit(false)}
+    >
+      <ModalBody>
+      <div className="w-auto h-auto flex justify-center items-center">
+      <form className="intro-y p-5 flex flex-col gap-1">
         <div>
           <label htmlFor="crud-form-1" className="form-label">
             Title
@@ -47,7 +54,7 @@ export const Formcito = ({ task, saySome, refreshUi }) => {
             onChange={handleChange}
             type="text"
             className="form-control w-full"
-            autoFocus='true'
+            autoFocus={true}
           />
         </div>
 
@@ -68,11 +75,11 @@ export const Formcito = ({ task, saySome, refreshUi }) => {
             />
           </div>
         </div>
-        <div className="text-right mt-5">
+        <div className="text-right mt-5 flex justify-around">
           <button
             type="button"
             className="btn btn-outline-secondary w-24 mr-1"
-            onClick={saySome}
+            onClick={() => setViewEdit(false)}
           >
             Cancel
           </button>
@@ -85,6 +92,8 @@ export const Formcito = ({ task, saySome, refreshUi }) => {
           </button>
         </div>
       </form>
-    </div>
+      </div>
+      </ModalBody>
+    </Modal>
   );
 };

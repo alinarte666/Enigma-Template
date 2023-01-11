@@ -8,12 +8,13 @@ export const UseLogin = () => {
   const [url, setUrl] = React.useState(
     "https://api-todos-prueba.onrender.com/api/v1/auth/login"
   );
-  const [messageError, setMessageError] = React.useState("");
-  const [success, setSuccess] = React.useState(false);
+  const [messageError, setMessageError] = React.useState(false);
   const [createdList] = useCreateList();
   const createList = localStorage.getItem("createdList");
 
-  const userLogin = (dataUser, fun1, state) => {
+  
+
+  const userLogin = async (dataUser, fun1, state) => {
     fetch(url, {
       headers: {
         Accept: "application/json",
@@ -24,16 +25,19 @@ export const UseLogin = () => {
     })
     .then((res) => res.json()) 
     .then((res) => {
-        console.log(res);
         setCurrentUser(res)
         localStorage.setItem("token", res.accessToken);
+        {res.message ? setMessageError(true) : '' }
         {state == true ? createdList(res.accessToken) : console.log("chale")}
-        fun1();
-      }).catch(e => {
-        console.log(e)
-        setMessageError(e.message)
+        {res.accessToken ? fun1() : ''}
+        
+      })
+    .catch(e => {
+        console.log(e)              //Este catch no me funciona, no se porque              
+        setMessageError(e.message)  //Creo que es un despiste del dev backend
       });
+    
   };
 
-  return [userLogin, success]; 
+  return [userLogin, messageError, setMessageError]; 
 };
