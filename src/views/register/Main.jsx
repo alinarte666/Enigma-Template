@@ -22,6 +22,13 @@ function Main() {
       .addClass("login");
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setError(false);
+      setLoading(false)
+    }, 2500)
+  }, [error])
+
   const goToHome = () => {
     navigate("/simple-menu/crud-data-list");
   };
@@ -57,6 +64,7 @@ function Main() {
         .catch((error) => console.log({ error }));
     } else {
       setError(true);
+      setLoading(true)
     }
   };
 
@@ -198,7 +206,7 @@ function Main() {
                   .
                 </div>
                 {error && (
-                  <div className="my-auto text-pink-600 text-[20px] text-center">
+                  <div className="my-auto text-pink-600 text-[18px] text-center">
                     Intenta de nuevo, rellena todos los campos 
                   </div>
                 )}
@@ -210,7 +218,7 @@ function Main() {
                     Register
                   </button>
                   <button className="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top">
-                    <Link to="/">Log In</Link>
+                    <Link to="/login">Log In</Link>
                   </button>
                 </div>
                 {loading && <div className="w-full h-[80px] flex justify-center absolute z-50 top-[48%] items-center">
