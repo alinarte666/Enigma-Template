@@ -149,7 +149,7 @@ function Main() {
                     Login
                   </button>
                   <button className="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top">
-                    <Link to="/register">Register</Link>
+                    <Link to="/">Register</Link>
                   </button>
                 </div>
                 <div className="intro-x mt-10 xl:mt-24 text-slate-600 dark:text-slate-500 text-center xl:text-left">
