@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState} from "react";
 import { useRecoilState } from "recoil";
 import { currentUserAtom } from "../../recoil/atom/userAtom";
 import { Link, useNavigate } from "react-router-dom";
@@ -27,9 +27,13 @@ function Main(props) {
   const hideSearchDropdown = () => {
     setSearchDropdown(false);
   };
+  const navigate = useNavigate()
   const [user, setCurrentUser] = useRecoilState(currentUserAtom);
 
-  const logOut = () => setCurrentUser("");
+  const logOut = () => {
+    setCurrentUser("");
+    navigate('/login')
+  }
   
 
   return (
@@ -75,7 +79,7 @@ function Main(props) {
           {/* END: Breadcrumb */}
          
           {/* BEGIN: Account Menu */}
-          <Dropdown className="intro-x w-8 h-8">
+          <Dropdown className='intro-x w-8 h-8'>
             <DropdownToggle
               tag="div"
               role="button"
@@ -97,7 +101,7 @@ function Main(props) {
                   </div>
                 </DropdownHeader>
                 <DropdownDivider className="border-white/[0.08]" />
-                <DropdownItem className="hover:bg-white/5">
+                <DropdownItem className="hover:bg-white/5" >
                   <Lucide icon="User" className="w-4 h-4 mr-2" />{" "}
                   Profile
                 </DropdownItem>
