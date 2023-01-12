@@ -8,18 +8,13 @@ const simpleMenu = atom({
       
       "devider",
       {
-        icon: "Edit",
+        icon: "Home",
         title: "Crud",
         subMenu: [
           {
-            icon: "",
+            icon: "Edit",
             pathname: "/simple-menu/crud-data-list",
             title: "Data List",
-          },
-          {
-            icon: "",
-            pathname: "/simple-menu/crud-form",
-            title: "Form",
           },
         ],
       },

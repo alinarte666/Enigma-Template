@@ -76,7 +76,7 @@ import ProtectedRoute from '../utils/hook/ProtectedRoute'
 function Router() {
   const routes = [
     {
-      path: "/",
+      path: "/login",
       element: <Login />,
     },
     {
@@ -624,7 +624,7 @@ function Router() {
       ],
     },
     {
-      path: "/register",
+      path: "/",
       element: <Register />,
     },
     {
