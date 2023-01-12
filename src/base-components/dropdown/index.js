@@ -4,7 +4,6 @@ import {
   useEffect,
   createContext,
   useContext,
-  useState
 } from "react";
 import { createPortal } from "react-dom";
 import "@left4code/tw-starter/dist/js/dropdown";
@@ -13,42 +12,42 @@ import dom from "@left4code/tw-starter/dist/js/dom";
 import { useLocation } from "react-router-dom";
 
 
+
 const init = (el, props) => {
-  const view = localStorage.getItem("clicked");
   const dropdown = tailwind.Dropdown.getOrCreateInstance(el);
-  console.log(dropdown)
   setTimeout(() => {
     const isDropdownShowed = dom(el).find(
       "[data-dropdown-replacer]"
     ).length;
     if (props.show && !isDropdownShowed) {
       dropdown.show();
-      console.log('me esto ejecutando dropdown.show');
     } else if (!props.show && isDropdownShowed) {
-      dropdown.hide(); 
-      console.log('me esto ejecutando dropdown.hide');
-    } 
+      dropdown.hide(); } 
   });
-
   if (el["__initiated"] === undefined) {
     el["__initiated"] = true;
-
+    
     el.addEventListener("show.tw.dropdown", () => {
       props.onShow();
+      console.log('hola soy prop.onShow') //Se ejecuta cuando se abre el dropdown
     });
 
     el.addEventListener("shown.tw.dropdown", () => {
       props.onShown();
+      console.log('hola soy prop.onShown') //Se ejecuta cuando se abre el dropdown
     });
 
     el.addEventListener("hide.tw.dropdown", () => {
       props.onHide();
+      console.log('hola soy prop.onHide') //Se ejecuta cuando se cierra el dropdown
     });
 
     el.addEventListener("hidden.tw.dropdown", () => {
       props.onHidden();
+      console.log('hola soy prop.onHidden') //Se ejecuta cuando se cierra el dropdown
     });
-  }
+    
+  } 
 };
 
 // Dropdown wrapper
@@ -56,11 +55,10 @@ const dropdownRefContext = createContext();
 function Dropdown(props) {
   const dropdownRef = createRef();
   const location = useLocation();
-
   // On prop change
   useEffect(() => {
     init(dropdownRef.current, props);
-    localStorage.setItem("clicked", false)
+    console.log(location)
   }, [props.show, location]);
 
   return createElement(
@@ -109,13 +107,14 @@ Dropdown.defaultProps = {
 // Dropdown toggle
 function DropdownToggle(props) {
   const { tag, href, ...computedProps } = props;
+
   return createElement(
     props.tag,
     {
       ...computedProps,
       className: `dropdown-toggle cursor-pointer ${props.className}`,
       onClick: () => {
-        console.log(props);
+        console.log(href);
       },
       "aria-expanded": false,
       "data-tw-toggle": "dropdown",
@@ -136,7 +135,6 @@ DropdownToggle.defaultProps = {
 function DropdownMenu(props) {
   const dropdownRef = useContext(dropdownRefContext);
   const dropdownMenuRef = createRef();
-
   useEffect(() => {
     dom(dropdownMenuRef.current).appendTo(dropdownRef.current);
   }, [dropdownRef]);
@@ -188,7 +186,7 @@ function DropdownItem(props) {
       props.tag,
       {
         className: `dropdown-item cursor-pointer ${props.className}`,
-        onClick: () => {localStorage.setItem("clicked", true)}, //() => {console.log('clicked')} //TODO
+       // onClick: () => {setToogle(!toogle)}, //() => {console.log('clicked')} //TODO
       },
        props.children
     )
